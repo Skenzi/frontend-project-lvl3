@@ -1,0 +1,37 @@
+{
+  "name": "@hexlet/code",
+  "type": "module",
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
+  "version": "0.0.0",
+  "description": "Web application for automatic collection of messages from sources",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "test": "npx jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skenzi/frontend-project-lvl3.git"
+  },
+  "keywords": [
+    "RSS"
+  ],
+  "author": "Dmitry Klimenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Skenzi/frontend-project-lvl3/issues"
+  },
+  "homepage": "https://github.com/Skenzi/frontend-project-lvl3#readme",
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.6",
+    "html-webpack-plugin": "^5.3.1",
+    "jest": "^26.6.3",
+    "webpack": "^5.35.1"
+  }
+}
