@@ -1,4 +1,4 @@
 import './bootstrap/bootstrap.min.css';
-import init from './init.js';
+import initHtml from './builderHtml.js';
 
-init();
+initHtml();
