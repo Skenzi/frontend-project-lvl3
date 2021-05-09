@@ -9,7 +9,7 @@ export default (url, validation) => {
       axios.get(`https://hexlet-allorigins.herokuapp.com/get?url=${encodeURIComponent(url)}`)
         .then((data) => {
           const document = parser(data);
-          watcherState.dataRss.push({idFeed: `feed${watcherState.dataRss.length + 1}`, document});
+          watcherState.dataRss.push({ idFeed: `feed${watcherState.dataRss.length + 1}`, document });
         })
         .catch((e) => console.log(e));
     }

@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: 'builde.js',
+    filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
   mode: process.env.NODE_ENV || 'development',
@@ -21,7 +21,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'RSS agregator',
+      title: 'RSS aggregator',
     }),
   ],
 };
