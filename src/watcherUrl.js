@@ -1,23 +1,23 @@
 import onChange from 'on-change';
 import stateUrl from './stateUrl.js';
-import renderError from './renderError.js';
-/* import parser from './parser.js';
-import render from './render.js';
-import getDataFromUrl from './getDataFromUrl.js'; */
 
 const watcherUrl = onChange(stateUrl, (path, value) => {
+  const feedback = document.querySelector('.feedback');
+  const input = document.querySelector('[name=url]');
+  input.classList.remove('is-invalid');
+  feedback.classList.remove('text-success', 'text-danger');
+  feedback.textContent = '';
   switch (path) {
-    case 'urlIsValide':
-      if (value) {
-        stateUrl.validUrls.push(value);
-        console.log('ok!');
-      }
-      break;
-    case 'error':
-      renderError(value);
+    case 'validUrl':
+      stateUrl.validUrls.push(value);
+      feedback.classList.add('text-success');
+      feedback.textContent = 'RSS успешно добавлен.';
       break;
     default:
-      console.log('hz');
+      input.classList.add('is-invalid');
+      feedback.classList.add('text-danger');
+      feedback.textContent = value;
+      break;
   }
 });
 

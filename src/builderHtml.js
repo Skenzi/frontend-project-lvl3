@@ -1,4 +1,5 @@
 import isValide from './isValide.js';
+import getDataFromUrl from './getDataFromUrl.js';
 
 const buildForm = () => {
   const form = document.createElement('form');
@@ -9,7 +10,7 @@ const buildForm = () => {
     const formData = new FormData(form);
     const url = formData.get('url');
     form.reset();
-    isValide(url);
+    parser(getDataFromUrl(isValide(url)));
   });
 
   const formRow = document.createElement('div');

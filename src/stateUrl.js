@@ -1,7 +1,5 @@
-const stateUrl = {
+export default {
   validUrls: [],
   error: '',
-  urlIsValide: null,
+  validUrl: null,
 }
-
-export default stateUrl;
