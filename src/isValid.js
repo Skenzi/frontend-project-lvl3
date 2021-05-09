@@ -7,6 +7,7 @@ const scheme = yup.string().matches(/^https?:\/\/[\da-z.\/]+\.rss$/);
 export default (url) => scheme.isValid(url)
   .then((valid) => {
     if (valid && !watcherUrl.validUrls.includes(url)) {
+      console.log(url)
       watcherUrl.validUrl = url;
       return true;
     }
