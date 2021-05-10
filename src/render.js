@@ -1,6 +1,6 @@
-const buildFeeds = (value) => {
-  const feeds = document.querySelector('.feeds');
-  feeds.textContent = '';
+const buildFeeds = (feeds) => {
+  const feedsContainer = document.querySelector('.feeds');
+  feedsContainer.textContent = '';
 
   const h2 = document.createElement('h2');
   h2.textContent = 'Фиды';
@@ -8,28 +8,25 @@ const buildFeeds = (value) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'mb-5');
 
-  value.forEach((docRss) => {
-    const titleFeeds = docRss.document.querySelector('title');
-    const descriptionFeeds = docRss.document.querySelector('description');
-
+  feeds.forEach((feed) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item');
-    li.setAttribute('data-id-feed', docRss.idFeed);
+    li.setAttribute('data-id-feed', feed.id);
 
     const h3 = document.createElement('h3');
-    h3.textContent = titleFeeds.textContent;
+    h3.textContent = feed.titleFeed.textContent;
 
     const p = document.createElement('p');
-    p.textContent = descriptionFeeds.textContent;
+    p.textContent = feed.descriptionFeed.textContent;
 
     li.prepend(h3, p);
     ul.prepend(li);
   });
 
-  feeds.prepend(h2, ul);
+  feedsContainer.prepend(h2, ul);
 };
 
-const buildPosts = (value) => {
+const buildPosts = (posts) => {
   const postsContainer = document.querySelector('.posts');
   postsContainer.textContent = '';
 
@@ -39,32 +36,29 @@ const buildPosts = (value) => {
   const ul = document.createElement('ul');
   ul.classList.add('list-group');
 
-  value.forEach((docRss) => {
-    const posts = docRss.document.querySelectorAll('item');
+  posts.forEach((post) => {
+    const button = document.createElement('button');
+    button.classList.add('btn', 'btn-sm', 'btn-primary');
+    button.textContent = 'Перейти';
 
-    posts.forEach((post) => {
-      const title = post.querySelector('title');
-      const link = post.querySelector('link');
-      const button = document.createElement('button');
-      button.classList.add('btn', 'btn-sm', 'btn-primary');
-      button.textContent = 'Перейти';
+    const a = document.createElement('a');
+    a.setAttribute('href', post.linkPost.textContent);
+    a.textContent = post.titlePost.textContent;
 
-      const a = document.createElement('a');
-      a.setAttribute('href', link.textContent);
-      a.textContent = title.textContent;
+    const li = document.createElement('li');
+    li.classList.add('d-flex', 'justify-content-between', 'align-items-start', 'list-group-item');
+    li.setAttribute('data-id-feed-item', post.idFeed);
+    li.prepend(a, button);
 
-      const li = document.createElement('li');
-      li.classList.add('d-flex', 'justify-content-between', 'align-items-start', 'list-group-item');
-      li.setAttribute('data-id-feed-item', docRss.idFeed);
-      li.prepend(a, button);
-
-      ul.prepend(li);
-    });
+    ul.prepend(li);
   });
   postsContainer.prepend(h2, ul);
 };
 
-export default (value) => {
-  buildFeeds(value);
-  buildPosts(value);
+export default (value, path) => {
+  if (path === 'feeds') {
+    buildFeeds(value);
+  } else {
+    buildPosts(value);
+  }
 };

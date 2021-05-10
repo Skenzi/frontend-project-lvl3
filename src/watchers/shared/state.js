@@ -1,3 +1,4 @@
 export default {
-  dataRss: [],
+  feeds: [],
+  posts: [],
 };
