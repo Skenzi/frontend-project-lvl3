@@ -6,7 +6,7 @@ const axios = require('axios');
 export default (url, validation) => {
   validation.then((statusValid) => {
     if (statusValid) {
-      axios.get(url)
+      axios.get(`https://hexlet-allorigins.herokuapp.com/get?url=${encodeURIComponent(url)}`)
         .then((data) => {
           const document = parser(data);
           watcherState.dataRss.push({ idFeed: `feed${watcherState.dataRss.length + 1}`, document });
