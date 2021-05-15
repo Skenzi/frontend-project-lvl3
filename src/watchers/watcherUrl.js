@@ -8,8 +8,7 @@ const watcherUrl = onChange(stateUrl, (path, value) => {
   feedback.classList.remove('text-success', 'text-danger');
   feedback.textContent = '';
   switch (path) {
-    case 'validUrl':
-      stateUrl.validUrls.push(value);
+    case 'validUrls':
       feedback.classList.add('text-success');
       feedback.textContent = 'RSS успешно добавлен.';
       break;
