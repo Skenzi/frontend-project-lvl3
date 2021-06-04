@@ -1,10 +1,13 @@
 import i18n from 'i18next';
-import state from './watchers/shared/state.js';
 
-const postsController = (postButton, elementA, postData) => {
+const postsController = (postButton, elementA, postData, state) => {
   postButton.addEventListener('click', () => {
+    state.content.readingPosts.push(postData.id);
     const body = document.querySelector('body');
     body.classList.add('modal-open');
+
+    const modalBackground = document.querySelector('[data-modal-background]');
+    modalBackground.classList.add('modal-backdrop');
 
     elementA.classList.add('font-weight-normal');
     elementA.classList.remove('font-weight-bold');
@@ -14,7 +17,6 @@ const postsController = (postButton, elementA, postData) => {
     modal.setAttribute('style', 'display: block');
     modal.setAttribute('aria-modal', 'true');
     modal.setAttribute('role', 'dialog');
-    modal.setAttribute('data-backdrop', 'true');
     modal.removeAttribute('aria-hidden');
     const modalTitle = modal.querySelector('.modal-title');
     modalTitle.textContent = postData.postTitle;
@@ -28,6 +30,7 @@ const postsController = (postButton, elementA, postData) => {
     const modalDismiss = modal.querySelectorAll('[data-dismiss]');
     modalDismiss.forEach((dismiss) => {
       dismiss.addEventListener('click', () => {
+        modalBackground.classList.remove('modal-backdrop');
         modal.classList.remove('show');
         modal.setAttribute('aria-hidden', 'true');
         modal.removeAttribute('aria-modal');
@@ -38,16 +41,34 @@ const postsController = (postButton, elementA, postData) => {
   });
 };
 
-const buildFeeds = (feeds) => {
+const buildContainers = () => {
   const feedsContainer = document.querySelector('.feeds');
-  feedsContainer.textContent = '';
 
-  const h2 = document.createElement('h2');
-  h2.textContent = i18n.t('feedsTitle');
+  const feedsContainerTitle = document.createElement('h2');
+  feedsContainerTitle.textContent = i18n.t('feedsTitle');
 
-  const ul = document.createElement('ul');
-  ul.classList.add('list-group', 'mb-5');
+  const listFeeds = document.createElement('ul');
+  listFeeds.classList.add('list-group', 'mb-5');
 
+  feedsContainer.prepend(feedsContainerTitle, listFeeds);
+
+  const postsContainer = document.querySelector('.posts');
+
+  const postsContainerTitle = document.createElement('h2');
+  postsContainerTitle.textContent = i18n.t('postsTitle');
+
+  const listPosts = document.createElement('ul');
+  listPosts.classList.add('list-group');
+
+  postsContainer.prepend(postsContainerTitle, listPosts);
+};
+
+const buildFeeds = (feeds, state) => {
+  if (state.content.status === 'empty') {
+    buildContainers();
+  }
+  const listFeeds = document.querySelector('.feeds > ul');
+  listFeeds.textContent = '';
   feeds.forEach((feed) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item');
@@ -60,54 +81,40 @@ const buildFeeds = (feeds) => {
     p.textContent = feed.feedDescription;
 
     li.prepend(h3, p);
-    ul.prepend(li);
+    listFeeds.prepend(li);
   });
-
-  feedsContainer.prepend(h2, ul);
 };
 
-const buildPosts = (posts) => {
-  const postsContainer = document.querySelector('.posts');
-  postsContainer.textContent = '';
+const buildPosts = (posts, state) => {
+  const listPosts = document.querySelector('.posts > ul');
+  listPosts.textContent = '';
 
-  const h2 = document.createElement('h2');
-  h2.textContent = i18n.t('postsTitle');
+  posts.forEach((post) => {
+    const button = document.createElement('button');
+    button.classList.add('btn', 'btn-sm', 'btn-primary');
+    button.setAttribute('data-toggle', 'modal');
+    button.setAttribute('data-target', '#modal');
+    button.textContent = 'Перейти';
 
-  const ul = document.createElement('ul');
-  ul.classList.add('list-group');
+    const a = document.createElement('a');
+    a.classList.add('font-weight-bold');
+    a.setAttribute('href', post.postLink);
+    a.setAttribute('target', '_blank');
+    a.textContent = post.postTitle;
 
-  state.feeds.forEach((feed) => {
-    const currentPosts = posts.filter((post) => post.idFeed === feed.id);
-    currentPosts.forEach((post) => {
-      const button = document.createElement('button');
-      button.classList.add('btn', 'btn-sm', 'btn-primary');
-      button.setAttribute('data-toggle', 'modal');
-      button.setAttribute('data-target', '#modal');
-      button.textContent = 'Перейти';
+    if (state.content.readingPosts.includes(post.id)) {
+      a.classList.add('font-weight-normal');
+      a.classList.remove('font-weight-bold');
+    }
 
-      const a = document.createElement('a');
-      a.classList.add('font-weight-bold');
-      a.setAttribute('href', post.postLink);
-      a.setAttribute('target', '_blank');
-      a.textContent = post.postTitle;
+    const li = document.createElement('li');
+    li.classList.add('d-flex', 'justify-content-between', 'align-items-start', 'list-group-item');
+    li.setAttribute('data-id-post', post.id);
+    li.prepend(a, button);
 
-      const li = document.createElement('li');
-      li.classList.add('d-flex', 'justify-content-between', 'align-items-start', 'list-group-item');
-      li.setAttribute('data-id-feed-item', post.idFeed);
-      li.setAttribute('data-date', post.pubDate);
-      li.prepend(a, button);
-
-      postsController(button, a, post);
-      ul.prepend(li);
-    });
+    postsController(button, a, post, state);
+    listPosts.append(li);
   });
-  postsContainer.prepend(h2, ul);
 };
 
-export default (value, path) => {
-  if (path === 'feeds') {
-    buildFeeds(value);
-  } else {
-    buildPosts(value);
-  }
-};
+export { buildFeeds, buildPosts };

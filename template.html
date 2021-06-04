@@ -7,6 +7,7 @@
     <title>RSS aggregator</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
+    <div data-modal-background='modal'></div>
     <div class="modal fade" id='modal' aria-labelledby='modal' aria-hidden="true" tabindex="-1">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -20,7 +21,7 @@
               <p></p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal" data-modal-cancel='cancel'>Cancel</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
               <a class="btn btn-primary" target='_blank' role="button" data-modal-agree='agree'>Перейти</a>
             </div>
           </div>
