@@ -1,10 +1,10 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
-  output: {
-    filename: 'build.js',
-    path: __dirname,
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './dist',
+    stats: 'errors-only',
   },
   mode: process.env.NODE_ENV || 'development',
   module: {
