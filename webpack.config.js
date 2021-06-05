@@ -4,7 +4,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'build.js',
-    path: `${__dirname}/dist`,
+    path: __dirname,
   },
   mode: process.env.NODE_ENV || 'development',
   module: {
