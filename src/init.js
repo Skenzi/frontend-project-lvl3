@@ -65,7 +65,7 @@ const checkNewPosts = (state, delay) => {
 };
 
 const formController = (state) => {
-  const form = document.querySelector('form');
+  const form = document.querySelector('form.rss-form');
   console.log(form);
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
