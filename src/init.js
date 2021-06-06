@@ -66,7 +66,7 @@ const checkNewPosts = (state, delay) => {
 
 const formController = (state) => {
   const form = document.querySelector('form');
-
+  console.log(form);
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
     const formData = new FormData(form);
@@ -75,15 +75,19 @@ const formController = (state) => {
     const valid = validate(inputValue, state);
 
     if (valid !== null) {
+      // eslint-disable-next-line no-param-reassign
       state.form.status = 'invalid';
+      // eslint-disable-next-line no-param-reassign
       state.error = valid;
       return;
     }
+    // eslint-disable-next-line no-param-reassign
     state.form.status = 'wait';
     getDataFromUrl(inputValue)
       .then(({
         feedDescription, feedTitle, items, link,
       }) => {
+        // eslint-disable-next-line no-param-reassign
         state.form.status = 'success';
         state.form.validUrls.push(inputValue);
         if (!_.isEmpty(state.content.feeds)) {
@@ -97,6 +101,7 @@ const formController = (state) => {
       .catch((e) => {
         // eslint-disable-next-line no-param-reassign
         state.form.status = 'invalid';
+        // eslint-disable-next-line no-param-reassign
         state.error = e.message;
       });
     form.reset();
