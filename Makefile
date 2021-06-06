@@ -9,10 +9,10 @@ publish:
 	npm publish --dry-run
 
 lint:
-	npx eslint .
+	npx eslint src/
 
 fix:
-	npx eslint . --fix
+	npx eslint src/ --fix
 
 build:
 	rm -rf dist
