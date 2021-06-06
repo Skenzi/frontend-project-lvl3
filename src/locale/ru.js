@@ -1,9 +1,12 @@
 export default {
   translation: {
     error: {
-      error1: 'Такой RSS уже существует',
-      error2: 'Ресурс не содержит валидный RSS',
+      alreadyExist: 'RSS уже существует',
+      invalidUrl: 'Ссылка должна быть валидным URL',
+      invalidRss: 'Ресурс не содержит валидный RSS',
+      network: 'Ошибка сети',
     },
+    success: 'RSS успешно добавлен',
     feedsTitle: 'Фиды',
     postsTitle: 'Посты',
   },

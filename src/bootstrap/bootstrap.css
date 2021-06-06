@@ -10097,6 +10097,10 @@ button.bg-dark:focus {
   font-weight: 700 !important;
 }
 
+a:visited {
+  font-weight: 400 !important;
+}
+
 .font-weight-bolder {
   font-weight: bolder !important;
 }

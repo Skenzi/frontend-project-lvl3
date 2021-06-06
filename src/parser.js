@@ -1,5 +1,4 @@
 import i18n from 'i18next';
-import watcherState from './watcherState';
 
 export default ({ data }, link) => {
   const parser = new DOMParser();
@@ -7,8 +6,7 @@ export default ({ data }, link) => {
   const parserError = document.querySelector('parsererror');
 
   if (parserError) {
-    watcherState.error = i18n.t('error.error2');
-    throw new Error('Hernia bratan');
+    throw new Error(i18n.t('error.invalidRss'));
   }
 
   const feedTitle = document.querySelector('title');

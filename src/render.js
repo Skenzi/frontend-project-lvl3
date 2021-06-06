@@ -1,5 +1,11 @@
 import i18n from 'i18next';
 
+const markAsReadingPost = (elementA, postData, state) => {
+  state.content.readingPosts.push(postData.id);
+  elementA.classList.add('font-weight-normal');
+  elementA.classList.remove('font-weight-bold');
+};
+
 const postsController = (postButton, elementA, postData, state) => {
   postButton.addEventListener('click', () => {
     state.content.readingPosts.push(postData.id);
@@ -9,8 +15,7 @@ const postsController = (postButton, elementA, postData, state) => {
     const modalBackground = document.querySelector('[data-modal-background]');
     modalBackground.classList.add('modal-backdrop');
 
-    elementA.classList.add('font-weight-normal');
-    elementA.classList.remove('font-weight-bold');
+    markAsReadingPost(elementA, postData, state);
 
     const modal = document.querySelector('.modal');
     modal.classList.add('show');
@@ -101,6 +106,7 @@ const buildPosts = (posts, state) => {
     a.setAttribute('href', post.postLink);
     a.setAttribute('target', '_blank');
     a.textContent = post.postTitle;
+    a.addEventListener('click', () => markAsReadingPost(a, post, state));
 
     if (state.content.readingPosts.includes(post.id)) {
       a.classList.add('font-weight-normal');

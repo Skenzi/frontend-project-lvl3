@@ -25,14 +25,14 @@ const getPosts = (items) => {
 };
 
 const validate = (url, state) => {
-  const scheme = yup.string().url().notOneOf(state.form.validUrls);
+  const scheme = yup.string().url();
   try {
-    return scheme.validateSync(url);
+    scheme.notOneOf(state.form.validUrls).validateSync(url);
+    return null;
   } catch (e) {
     // eslint-disable-next-line no-param-reassign
-    state.error = e;
+    return e.message;
   }
-  return null;
 };
 const getProxyUrl = (url) => {
   const proxy = 'https://hexlet-allorigins.herokuapp.com';
@@ -74,31 +74,31 @@ const formController = (state) => {
 
     const valid = validate(inputValue, state);
 
-    if (valid) {
-      const feedback = document.querySelector('.feedback');
-      const input = document.querySelector('.rss-form input');
-      input.classList.remove('is-invalid');
-      feedback.classList.remove('text-danger');
-      feedback.classList.add('text-success');
-      feedback.textContent = 'RSS успешно добавлен!';
-      state.form.validUrls.push(inputValue);
-      if (!_.isEmpty(state.content.feeds)) {
-        // eslint-disable-next-line no-param-reassign
-        state.content.status = 'filling';
-      }
-      getDataFromUrl(inputValue)
-        .then(({
-          feedDescription, feedTitle, items, link,
-        }) => {
-          state.content.feeds.push({ feedDescription, feedTitle, link });
-          const posts = getPosts(items);
-          state.content.posts.unshift(...posts);
-        })
-        .catch((e) => {
-          // eslint-disable-next-line no-param-reassign
-          state.error = e;
-        });
+    if (valid !== null) {
+      state.form.status = 'invalid';
+      state.error = valid;
+      return;
     }
+    state.form.status = 'wait';
+    getDataFromUrl(inputValue)
+      .then(({
+        feedDescription, feedTitle, items, link,
+      }) => {
+        state.form.status = 'success';
+        state.form.validUrls.push(inputValue);
+        if (!_.isEmpty(state.content.feeds)) {
+          // eslint-disable-next-line no-param-reassign
+          state.content.status = 'filling';
+        }
+        state.content.feeds.push({ feedDescription, feedTitle, link });
+        const posts = getPosts(items);
+        state.content.posts.unshift(...posts);
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-param-reassign
+        state.form.status = 'invalid';
+        state.error = e.message;
+      });
     form.reset();
   });
 };
@@ -115,10 +115,10 @@ const initHtml = () => {
     .then(() => {
       yup.setLocale({
         mixed: {
-          notOneOf: i18n.t('error.error1'),
+          notOneOf: i18n.t('error.alreadyExist'),
         },
         string: {
-          url: i18n.t('error.error2'),
+          url: i18n.t('error.invalidUrl'),
         },
       });
     });
@@ -126,12 +126,14 @@ const initHtml = () => {
     form: {
       validUrls: [],
       valid: null,
+      status: null,
     },
     content: {
       feeds: [],
       posts: [],
       status: 'empty',
       readingPosts: [],
+      lastReadingPost: null,
     },
     error: null,
   };
