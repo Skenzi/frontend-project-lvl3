@@ -142,8 +142,7 @@ const initHtml = () => {
     },
     error: null,
   };
-  const form = document.querySelector('form.rss-form');
-  console.log(form);
+  console.log(document);
   const watchedState = watcherState(state);
   formController(watchedState);
   const delay = 5000;
