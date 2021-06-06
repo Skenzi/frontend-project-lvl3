@@ -4,9 +4,9 @@
     "verbose": true,
     "testURL": "http://localhost/"
   },
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "Web application for automatic collection of messages from sources",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "test": "npx jest"
