@@ -15,5 +15,4 @@ fix:
 	npx eslint src/ --fix
 
 build:
-	rm -rf dist
 	NODE_ENV=production npx webpack

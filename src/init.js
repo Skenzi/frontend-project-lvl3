@@ -142,7 +142,6 @@ const initHtml = () => {
     },
     error: null,
   };
-  console.log(document);
   const watchedState = watcherState(state);
   formController(watchedState);
   const delay = 5000;
