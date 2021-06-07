@@ -6,7 +6,7 @@
   },
   "version": "0.5.0",
   "description": "Web application for automatic collection of messages from sources",
-  "main": "./src/index.js",
+  "main": "./src/init.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "test": "npx jest"
