@@ -7,11 +7,6 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
-  devtool: 'inline-source-map',
-  devServer: {
-    contentBase: './dist',
-    stats: 'errors-only',
-  },
   mode: process.env.NODE_ENV || 'development',
   module: {
     rules: [
