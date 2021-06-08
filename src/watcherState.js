@@ -1,8 +1,7 @@
 import onChange from 'on-change';
-import i18n from 'i18next';
 import { buildFeeds, buildPosts } from './render.js';
 
-export default (state) => onChange(state, (path, value) => {
+export default (state, i18n) => onChange(state, (path, value) => {
   const feedback = document.querySelector('.feedback');
   const submit = document.querySelector('form.rss-form button[type=submit]');
   submit.removeAttribute('disabled');
@@ -12,7 +11,7 @@ export default (state) => onChange(state, (path, value) => {
       break;
     }
     case 'content.feeds': {
-      buildFeeds(value, state);
+      buildFeeds(value, state, i18n);
       break;
     }
     case 'content.posts': {

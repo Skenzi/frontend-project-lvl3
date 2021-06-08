@@ -1,5 +1,3 @@
-import i18n from 'i18next';
-
 const markAsReadingPost = (elementA, postData, state) => {
   state.content.readingPosts.push(postData.id);
   elementA.classList.add('font-weight-normal');
@@ -46,7 +44,7 @@ const postsController = (postButton, elementA, postData, state) => {
   });
 };
 
-const buildContainers = () => {
+const buildContainers = (i18n) => {
   const feedsContainer = document.querySelector('.feeds');
 
   const feedsContainerTitle = document.createElement('h2');
@@ -68,9 +66,9 @@ const buildContainers = () => {
   postsContainer.prepend(postsContainerTitle, listPosts);
 };
 
-const buildFeeds = (feeds, state) => {
+const buildFeeds = (feeds, state, i18n) => {
   if (state.content.status === 'empty') {
-    buildContainers();
+    buildContainers(i18n);
   }
   const listFeeds = document.querySelector('.feeds > ul');
   listFeeds.textContent = '';

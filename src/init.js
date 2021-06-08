@@ -64,14 +64,14 @@ const checkNewPosts = (state, delay) => {
   }, delay);
 };
 
-const formController = (state) => {
+const formController = (state, i18instance) => {
   const form = document.querySelector('form.rss-form');
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
     const formData = new FormData(form);
-    const inputValue = formData.get('url');
+    const url = formData.get('url');
 
-    const valid = validate(inputValue, state);
+    const valid = validate(url, state);
 
     if (valid !== null) {
       // eslint-disable-next-line no-param-reassign
@@ -82,13 +82,13 @@ const formController = (state) => {
     }
     // eslint-disable-next-line no-param-reassign
     state.form.status = 'wait';
-    getDataFromUrl(inputValue)
+    getDataFromUrl(url)
       .then(({
         feedDescription, feedTitle, items, link,
       }) => {
         // eslint-disable-next-line no-param-reassign
         state.form.status = 'success';
-        state.form.validUrls.push(inputValue);
+        state.form.validUrls.push(url);
         if (!_.isEmpty(state.content.feeds)) {
           // eslint-disable-next-line no-param-reassign
           state.content.status = 'filling';
@@ -100,32 +100,19 @@ const formController = (state) => {
       .catch((e) => {
         // eslint-disable-next-line no-param-reassign
         state.form.status = 'invalid';
-        // eslint-disable-next-line no-param-reassign
-        state.error = e.message;
+        if (e.message === 'parserError') {
+          // eslint-disable-next-line no-param-reassign
+          state.error = i18instance.t('error.invalidRss');
+        } else {
+          // eslint-disable-next-line no-param-reassign
+          state.error = i18instance.t('error.network');
+        }
       });
     form.reset();
   });
 };
 
-const initHtml = () => {
-  i18n.init({
-    lng: 'ru',
-    debug: true,
-    resources: {
-      ru,
-      en,
-    },
-  })
-    .then(() => {
-      yup.setLocale({
-        mixed: {
-          notOneOf: i18n.t('error.alreadyExist'),
-        },
-        string: {
-          url: i18n.t('error.invalidUrl'),
-        },
-      });
-    });
+const init = (i18instance) => {
   const state = {
     form: {
       validUrls: [],
@@ -137,14 +124,35 @@ const initHtml = () => {
       posts: [],
       status: 'empty',
       readingPosts: [],
-      lastReadingPost: null,
     },
     error: null,
   };
-  const watchedState = watcherState(state);
-  formController(watchedState);
+  const watchedState = watcherState(state, i18instance);
+  formController(watchedState, i18instance);
   const delay = 5000;
   checkNewPosts(watchedState, delay);
 };
 
-export default initHtml;
+const test = () => {
+  const instance = i18n.createInstance();
+  return instance.init({
+    lng: 'ru',
+    debug: true,
+    resources: {
+      ru,
+      en,
+    },
+  })
+    .then(() => {
+      yup.setLocale({
+        mixed: {
+          notOneOf: instance.t('error.alreadyExist'),
+        },
+        string: {
+          url: instance.t('error.invalidUrl'),
+        },
+      });
+      return init(instance);
+    });
+};
+export default test;
