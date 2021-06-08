@@ -1,7 +1,7 @@
 const markAsReadingPost = (elementA, postData, state) => {
   state.content.readingPosts.push(postData.id);
-  elementA.classList.add('font-weight-normal');
-  elementA.classList.remove('font-weight-bold');
+  elementA.classList.add('fw-normal');
+  elementA.classList.remove('fw-bold');
 };
 
 const postsController = (postButton, elementA, postData, state) => {
@@ -100,7 +100,7 @@ const buildPosts = (posts, state) => {
     button.textContent = 'Просмотр';
 
     const a = document.createElement('a');
-    a.classList.add('font-weight-bold');
+    a.classList.add('fw-bold');
     a.setAttribute('href', post.postLink);
     a.setAttribute('target', '_blank');
     a.textContent = post.postTitle;
