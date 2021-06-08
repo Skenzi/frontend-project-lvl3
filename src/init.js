@@ -52,6 +52,7 @@ const checkNewPosts = (state, delay) => {
     const promise = state.form.validUrls.map((url) => getDataFromUrl(url));
     Promise.allSettled(promise).then((data) => {
       data.forEach(({ value }) => {
+        console.log(value)
         const { items } = value;
         const incomingPosts = getPosts(items);
         const newPosts = _.differenceBy(incomingPosts, state.content.posts, 'pubDate');
