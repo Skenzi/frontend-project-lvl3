@@ -107,8 +107,8 @@ const buildPosts = (posts, state) => {
     a.addEventListener('click', () => markAsReadingPost(a, post, state));
 
     if (state.content.readingPosts.includes(post.id)) {
-      a.classList.add('font-weight-normal');
-      a.classList.remove('font-weight-bold');
+      a.classList.add('fw-normal');
+      a.classList.remove('fw-bold');
     }
 
     const li = document.createElement('li');
