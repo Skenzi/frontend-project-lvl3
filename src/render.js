@@ -19,7 +19,6 @@ const postsController = (postButton, elementA, postData, state) => {
     modal.classList.add('show');
     modal.setAttribute('style', 'display: block');
     modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('role', 'dialog');
     modal.removeAttribute('aria-hidden');
     const modalTitle = modal.querySelector('.modal-title');
     modalTitle.textContent = postData.postTitle;
@@ -97,7 +96,8 @@ const buildPosts = (posts, state) => {
     button.classList.add('btn', 'btn-sm', 'btn-primary');
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', '#modal');
-    button.textContent = 'Перейти';
+    button.setAttribute('role', 'button');
+    button.textContent = 'Просмотр';
 
     const a = document.createElement('a');
     a.classList.add('font-weight-bold');
