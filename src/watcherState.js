@@ -3,9 +3,11 @@ import i18n from 'i18next';
 import { buildFeeds, buildPosts } from './render.js';
 
 export default (state) => onChange(state, (path, value) => {
+  const feedback = document.querySelector('.feedback');
+  const submit = document.querySelector('form.rss-form button[type=submit]');
+  submit.removeAttribute('disabled');
   switch (path) {
     case 'error': {
-      const feedback = document.querySelector('.feedback');
       feedback.textContent = value;
       break;
     }
@@ -24,7 +26,6 @@ export default (state) => onChange(state, (path, value) => {
       break;
     }
     case 'form.status': {
-      const feedback = document.querySelector('.feedback');
       const input = document.querySelector('.rss-form input');
       if (value === 'success') {
         input.classList.remove('is-invalid');
@@ -32,6 +33,7 @@ export default (state) => onChange(state, (path, value) => {
         feedback.classList.add('text-success');
         feedback.textContent = i18n.t('success');
       } else if (value === 'wait') {
+        submit.setAttribute('disabled', 'disabled');
         input.classList.remove('is-invalid');
         feedback.classList.remove('text-danger', 'text-success');
         feedback.textContent = 'Просмотр';
