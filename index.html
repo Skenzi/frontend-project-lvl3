@@ -8,7 +8,7 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <div data-modal-background='modal'></div>
-    <div class="modal fade" id='modal' aria-labelledby='modal' aria-hidden="true" tabindex="-1">
+    <div class="modal fade" id='modal' role="dialog" aria-labelledby='modal' aria-hidden="true" tabindex="-1">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -40,10 +40,10 @@
                     <form action='' class="rss-form">
                         <div class="form-row">
                             <div class="col">
-                                <input type="url" placeholder="ссылка RSS" autofocus role="textbox" required name="url" class="form-control form-control-lg w-100">
+                                <input aria-label="url" placeholder="ссылка RSS" autofocus role="textbox" required name="url" class="form-control form-control-lg w-100">
                             </div>
                             <div class="col-auto">
-                                <button type="submit" role="button" class="btn btn-lg btn-primary px-sm-5">Add</button>
+                                <button type="submit" aria-label="add" role="button" class="btn btn-lg btn-primary px-sm-5">Add</button>
                             </div>
                         </div>
                     </form>
