@@ -1,36 +1,20 @@
+/* eslint-disable no-param-reassign */
 import i18n from 'i18next';
 import axios from 'axios';
 import _ from 'lodash';
 import * as yup from 'yup';
-import parser from './parser.js';
+import parse from './parser.js';
 import watcherState from './watcherState.js';
-import ru from './locale/ru.js';
-import en from './locale/en.js';
+import resources from './locales/index.js';
 
-const getPosts = (items) => {
-  const posts = [...items].map((item) => {
-    const postTitle = item.querySelector('title');
-    const postLink = item.querySelector('link');
-    const postDescription = item.querySelector('description');
-    const pubDate = item.querySelector('pubDate');
-    return {
-      postTitle: postTitle.textContent,
-      postLink: postLink.textContent,
-      id: _.uniqueId(),
-      postDescription: postDescription.textContent,
-      pubDate: pubDate.textContent,
-    };
-  });
-  return posts;
-};
+const getUrls = (state) => state.content.feeds.map(({ link }) => link);
 
 const validate = (url, state) => {
   const scheme = yup.string().url();
   try {
-    scheme.notOneOf(state.form.validUrls).validateSync(url);
+    scheme.notOneOf(getUrls(state)).validateSync(url);
     return null;
   } catch (e) {
-    // eslint-disable-next-line no-param-reassign
     return e.message;
   }
 };
@@ -45,19 +29,21 @@ const getProxyUrl = (url) => {
   return proxyUrl.toString();
 };
 // http://lorem-rss.herokuapp.com/feed?unit=second&interval=30
-const getDataFromUrl = (url) => axios.get(getProxyUrl(url)).then((page) => parser(page, url));
+const getDataFromUrl = (url) => axios.get(getProxyUrl(url)).then((page) => parse(page, url));
+
+const identifyPosts = (posts) => posts.map((post) => ({ id: _.uniqueId(), ...post }));
 
 const checkNewPosts = (state, delay) => {
   setTimeout(function handel() {
-    const promise = state.form.validUrls.map((url) => getDataFromUrl(url));
+    const urls = getUrls(state);
+    const promise = urls.map((url) => getDataFromUrl(url));
     Promise.allSettled(promise).then((data) => {
       data.forEach(({ value }) => {
-        console.log(value);
-        const { items } = value;
-        const incomingPosts = getPosts(items);
-        const newPosts = _.differenceBy(incomingPosts, state.content.posts, 'pubDate');
+        const { items: incomingPosts } = value;
+        const newPosts = _.differenceBy(incomingPosts, state.content.posts, 'postLink');
         if (!_.isEmpty(newPosts)) {
-          state.content.posts.unshift(...newPosts);
+          const posts = identifyPosts(newPosts);
+          state.content.posts.unshift(...posts);
         }
       });
     });
@@ -75,37 +61,28 @@ const formController = (state, i18instance) => {
     const valid = validate(url, state);
 
     if (valid !== null) {
-      // eslint-disable-next-line no-param-reassign
       state.form.status = 'invalid';
-      // eslint-disable-next-line no-param-reassign
       state.error = valid;
       return;
     }
-    // eslint-disable-next-line no-param-reassign
     state.form.status = 'wait';
     getDataFromUrl(url)
       .then(({
         feedDescription, feedTitle, items, link,
       }) => {
-        // eslint-disable-next-line no-param-reassign
         state.form.status = 'success';
-        state.form.validUrls.push(url);
-        if (!_.isEmpty(state.content.feeds)) {
-          // eslint-disable-next-line no-param-reassign
-          state.content.status = 'filling';
-        }
-        state.content.feeds.push({ feedDescription, feedTitle, link });
-        const posts = getPosts(items);
+        state.content.status = _.isEmpty(state.content.feeds) ? 'empty' : 'filling';
+        state.content.feeds.push({
+          feedDescription, feedTitle, link, id: state.content.feeds.length + 1,
+        });
+        const posts = identifyPosts(items);
         state.content.posts.unshift(...posts);
       })
       .catch((e) => {
-        // eslint-disable-next-line no-param-reassign
         state.form.status = 'invalid';
         if (e.message === 'parserError') {
-          // eslint-disable-next-line no-param-reassign
           state.error = i18instance.t('error.invalidRss');
         } else {
-          // eslint-disable-next-line no-param-reassign
           state.error = i18instance.t('error.network');
         }
       });
@@ -116,14 +93,12 @@ const formController = (state, i18instance) => {
 const init = (i18instance) => {
   const state = {
     form: {
-      validUrls: [],
-      valid: null,
       status: null,
     },
     content: {
       feeds: [],
       posts: [],
-      status: 'empty',
+      status: null,
       readingPosts: [],
     },
     error: null,
@@ -134,15 +109,12 @@ const init = (i18instance) => {
   checkNewPosts(watchedState, delay);
 };
 
-const test = () => {
+export default () => {
   const instance = i18n.createInstance();
   return instance.init({
     lng: 'ru',
     debug: true,
-    resources: {
-      ru,
-      en,
-    },
+    resources,
   })
     .then(() => {
       yup.setLocale({
@@ -156,4 +128,3 @@ const test = () => {
       return init(instance);
     });
 };
-export default test;

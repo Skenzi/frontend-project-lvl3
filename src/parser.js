@@ -14,6 +14,15 @@ export default ({ data }, link) => {
     feedTitle: feedTitle.textContent,
     feedDescription: feedDescription.textContent,
     link,
-    items,
+    items: [...items].map((item) => {
+      const postTitle = item.querySelector('title');
+      const postLink = item.querySelector('link');
+      const postDescription = item.querySelector('description');
+      return {
+        postTitle: postTitle.textContent,
+        postLink: postLink.textContent,
+        postDescription: postDescription.textContent,
+      };
+    }),
   };
 };

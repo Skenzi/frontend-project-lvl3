@@ -1,5 +1,5 @@
 import onChange from 'on-change';
-import { buildFeeds, buildPosts } from './render.js';
+import { buildFeeds, buildPosts, buildContainers } from './render.js';
 
 export default (state, i18n) => onChange(state, (path, value) => {
   const feedback = document.querySelector('.feedback');
@@ -12,15 +12,21 @@ export default (state, i18n) => onChange(state, (path, value) => {
       feedback.textContent = value;
       break;
     }
+    case 'content.status': {
+      if (value === 'empty') {
+        buildContainers(i18n);
+      }
+      break;
+    }
     case 'content.feeds': {
-      buildFeeds(value, state, i18n);
+      buildFeeds(value);
       break;
     }
     case 'content.posts': {
-      buildPosts(value, state);
+      buildPosts(value, state, i18n);
       break;
     }
-    case 'content.lastReadingPost': {
+    case 'content.readingPost': {
       const a = document.querySelector(`[data-id=${value}]`);
       a.classList.add('font-weight-normal');
       a.classList.remove('font-weight-bold');
@@ -45,7 +51,7 @@ export default (state, i18n) => onChange(state, (path, value) => {
       break;
     }
     default: {
-      break;
+      throw new Error(`Unknown state: '${path}'!`);
     }
   }
 });

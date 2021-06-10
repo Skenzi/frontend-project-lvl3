@@ -1,46 +1,49 @@
-const markAsReadingPost = (elementA, postData, state) => {
-  state.content.readingPosts.push(postData.id);
-  elementA.classList.add('fw-normal');
-  elementA.classList.remove('fw-bold');
+const markAsReadingPost = (a, post, state) => {
+  a.classList.add('fw-normal');
+  a.classList.remove('fw-bold');
+  state.content.readingPosts.push(post.id);
 };
 
-const postsController = (postButton, elementA, postData, state) => {
-  postButton.addEventListener('click', () => {
-    state.content.readingPosts.push(postData.id);
-    const body = document.querySelector('body');
-    body.classList.add('modal-open');
+const buildModal = (post, i18n) => {
+  const body = document.querySelector('body');
+  body.classList.add('modal-open');
 
-    const modalBackground = document.querySelector('[data-modal-background]');
-    modalBackground.classList.add('modal-backdrop');
+  const modalBackground = document.querySelector('[data-modal-background]');
+  modalBackground.classList.add('modal-backdrop');
 
-    markAsReadingPost(elementA, postData, state);
+  const modal = document.querySelector('.modal');
+  modal.classList.add('show');
+  modal.setAttribute('style', 'display: block');
+  modal.setAttribute('aria-modal', 'true');
+  modal.removeAttribute('aria-hidden');
+  const modalTitle = modal.querySelector('.modal-title');
+  modalTitle.textContent = post.postTitle;
+  const modalBody = modal.querySelector('.modal-body > p');
+  modalBody.textContent = post.postDescription;
 
-    const modal = document.querySelector('.modal');
-    modal.classList.add('show');
-    modal.setAttribute('style', 'display: block');
-    modal.setAttribute('aria-modal', 'true');
-    modal.removeAttribute('aria-hidden');
-    const modalTitle = modal.querySelector('.modal-title');
-    modalTitle.textContent = postData.postTitle;
-    const modalBody = modal.querySelector('.modal-body > p');
-    modalBody.textContent = postData.postDescription;
+  const buttonAgree = modal.querySelector('[data-agree]');
+  buttonAgree.setAttribute('href', post.postLink);
+  buttonAgree.textContent = i18n.t('modal.go');
 
-    const modalAgree = modal.querySelector('[data-modal-agree]');
-    const link = elementA.getAttribute('href');
-    modalAgree.setAttribute('href', link);
+  const buttonClose = modal.querySelector('.modal-footer button[data-dismiss]');
+  buttonClose.textContent = i18n.t('modal.close');
 
-    const modalDismiss = modal.querySelectorAll('[data-dismiss]');
-    modalDismiss.forEach((dismiss) => {
-      dismiss.addEventListener('click', () => {
-        modalBackground.classList.remove('modal-backdrop');
-        modal.classList.remove('show');
-        modal.setAttribute('aria-hidden', 'true');
-        modal.removeAttribute('aria-modal');
-        modal.removeAttribute('style');
-        body.classList.remove('modal-open');
-      });
+  const modalDismiss = modal.querySelectorAll('[data-dismiss]');
+  modalDismiss.forEach((dismiss) => {
+    dismiss.addEventListener('click', () => {
+      modalBackground.classList.remove('modal-backdrop');
+      modal.classList.remove('show');
+      modal.setAttribute('aria-hidden', 'true');
+      modal.removeAttribute('aria-modal');
+      modal.removeAttribute('style');
+      body.classList.remove('modal-open');
     });
   });
+};
+
+const postsController = (a, post, state, i18n) => {
+  markAsReadingPost(a, post, state);
+  buildModal(post, i18n);
 };
 
 const buildContainers = (i18n) => {
@@ -65,10 +68,7 @@ const buildContainers = (i18n) => {
   postsContainer.prepend(postsContainerTitle, listPosts);
 };
 
-const buildFeeds = (feeds, state, i18n) => {
-  if (state.content.status === 'empty') {
-    buildContainers(i18n);
-  }
+const buildFeeds = (feeds) => {
   const listFeeds = document.querySelector('.feeds > ul');
   listFeeds.textContent = '';
   feeds.forEach((feed) => {
@@ -87,7 +87,7 @@ const buildFeeds = (feeds, state, i18n) => {
   });
 };
 
-const buildPosts = (posts, state) => {
+const buildPosts = (posts, state, i18n) => {
   const listPosts = document.querySelector('.posts > ul');
   listPosts.textContent = '';
 
@@ -97,14 +97,13 @@ const buildPosts = (posts, state) => {
     button.setAttribute('data-toggle', 'modal');
     button.setAttribute('data-target', '#modal');
     button.setAttribute('role', 'button');
-    button.textContent = 'Просмотр';
+    button.textContent = i18n.t('post.preview');
 
     const a = document.createElement('a');
     a.classList.add('fw-bold');
     a.setAttribute('href', post.postLink);
     a.setAttribute('target', '_blank');
     a.textContent = post.postTitle;
-    a.addEventListener('click', () => markAsReadingPost(a, post, state));
 
     if (state.content.readingPosts.includes(post.id)) {
       a.classList.add('fw-normal');
@@ -116,9 +115,11 @@ const buildPosts = (posts, state) => {
     li.setAttribute('data-id-post', post.id);
     li.prepend(a, button);
 
-    postsController(button, a, post, state);
     listPosts.append(li);
+
+    a.addEventListener('click', () => markAsReadingPost(a, post, state));
+    button.addEventListener('click', () => postsController(a, post, state, i18n));
   });
 };
 
-export { buildFeeds, buildPosts };
+export { buildFeeds, buildPosts, buildContainers };

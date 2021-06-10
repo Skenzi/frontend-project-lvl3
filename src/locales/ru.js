@@ -6,6 +6,13 @@ export default {
       invalidRss: 'Ресурс не содержит валидный RSS',
       network: 'Ошибка сети',
     },
+    modal: {
+      close: 'Закрыть',
+      go: 'Перейти',
+    },
+    post: {
+      preview: 'Просмотр',
+    },
     success: 'RSS успешно загружен',
     feedsTitle: 'Фиды',
     postsTitle: 'Посты',
