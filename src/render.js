@@ -1,4 +1,5 @@
-const markAsReadingPost = (a, post, state) => {
+const markAsReadingPost = (post, state) => {
+  const a = document.querySelector(`li[data-id-post=${CSS.escape(post.id)}] a`);
   a.classList.add('fw-normal');
   a.classList.remove('fw-bold');
   state.content.readingPosts.push(post.id);
@@ -41,8 +42,8 @@ const buildModal = (post, i18n) => {
   });
 };
 
-const postsController = (a, post, state, i18n) => {
-  markAsReadingPost(a, post, state);
+const postsController = (post, state, i18n) => {
+  markAsReadingPost(post, state);
   buildModal(post, i18n);
 };
 
@@ -117,8 +118,8 @@ const buildPosts = (posts, state, i18n) => {
 
     listPosts.append(li);
 
-    a.addEventListener('click', () => markAsReadingPost(a, post, state));
-    button.addEventListener('click', () => postsController(a, post, state, i18n));
+    a.addEventListener('click', () => markAsReadingPost(post, state));
+    button.addEventListener('click', () => postsController(post, state, i18n));
   });
 };
 
