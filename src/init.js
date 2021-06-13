@@ -3,6 +3,7 @@ import i18n from 'i18next';
 import axios from 'axios';
 import _ from 'lodash';
 import * as yup from 'yup';
+import 'bootstrap';
 import parse from './parser.js';
 import watcherState from './watcherState.js';
 import resources from './locales/index.js';
@@ -29,15 +30,16 @@ const getProxyUrl = (url) => {
   return proxyUrl.toString();
 };
 // http://lorem-rss.herokuapp.com/feed?unit=second&interval=30
-const getDataFromUrl = (url) => axios.get(getProxyUrl(url)).then((page) => parse(page, url));
+const getDataFromRss = (url) => axios.get(getProxyUrl(url)).then((page) => parse(page));
 
 const identifyPosts = (posts) => posts.map((post) => ({ id: _.uniqueId(), ...post }));
 
 const checkNewPosts = (state, delay) => {
   setTimeout(function handel() {
     const urls = getUrls(state);
-    const promise = urls.map((url) => getDataFromUrl(url));
-    Promise.allSettled(promise).then((data) => {
+    const promise = urls.map((url) => getDataFromRss(url));
+    Promise.allSettled(promise)
+    .then((data) => {
       data.forEach(({ value }) => {
         const { items: incomingPosts } = value;
         const newPosts = _.differenceBy(incomingPosts, state.content.posts, 'postLink');
@@ -46,8 +48,10 @@ const checkNewPosts = (state, delay) => {
           state.content.posts.unshift(...posts);
         }
       });
+    })
+    .then(() => {
+      setTimeout(handel, delay);
     });
-    setTimeout(handel, delay);
   }, delay);
 };
 
@@ -66,24 +70,24 @@ const formController = (state, i18instance) => {
       return;
     }
     state.form.status = 'wait';
-    getDataFromUrl(url)
+    getDataFromRss(url)
       .then(({
-        feedDescription, feedTitle, items, link,
+        description, title, items,
       }) => {
         state.form.status = 'success';
         state.content.status = _.isEmpty(state.content.feeds) ? 'empty' : 'filling';
         state.content.feeds.push({
-          feedDescription, feedTitle, link, id: state.content.feeds.length + 1,
+          description, title, link: url,
         });
         const posts = identifyPosts(items);
         state.content.posts.unshift(...posts);
       })
       .catch((e) => {
         state.form.status = 'invalid';
-        if (e.message === 'parserError') {
-          state.error = i18instance.t('error.invalidRss');
-        } else {
+        if (e.isAxiosError) {
           state.error = i18instance.t('error.network');
+        } else {
+          state.error = i18instance.t('error.invalidRss');
         }
       });
     form.reset();

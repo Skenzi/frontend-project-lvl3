@@ -1,6 +1,6 @@
-export default ({ data }, link) => {
+export default (rss) => {
   const parser = new DOMParser();
-  const document = parser.parseFromString(data.contents, 'application/xml');
+  const document = parser.parseFromString(rss.data.contents, 'application/xml');
   const parserError = document.querySelector('parsererror');
 
   if (parserError) {
@@ -11,17 +11,16 @@ export default ({ data }, link) => {
   const feedDescription = document.querySelector('description');
   const items = document.querySelectorAll('item');
   return {
-    feedTitle: feedTitle.textContent,
-    feedDescription: feedDescription.textContent,
-    link,
+    title: feedTitle.textContent,
+    description: feedDescription.textContent,
     items: [...items].map((item) => {
       const postTitle = item.querySelector('title');
       const postLink = item.querySelector('link');
       const postDescription = item.querySelector('description');
       return {
-        postTitle: postTitle.textContent,
-        postLink: postLink.textContent,
-        postDescription: postDescription.textContent,
+        title: postTitle.textContent,
+        link: postLink.textContent,
+        description: postDescription.textContent,
       };
     }),
   };

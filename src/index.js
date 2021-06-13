@@ -1,4 +1,4 @@
-import './bootstrap/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import initApp from './init.js';
 
 initApp();
