@@ -62,11 +62,11 @@ const rssFormController = (state, i18instance) => {
     const formData = new FormData(form);
     const url = formData.get('url');
 
-    const valid = validate(url, state);
+    const validateError = validate(url, state);
 
-    if (valid !== null) {
+    if (validateError !== null) {
       state.form.status = 'invalid';
-      state.form.error = valid;
+      state.form.error = validateError;
       return;
     }
     state.form.status = 'wait';

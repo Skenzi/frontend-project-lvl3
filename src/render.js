@@ -33,7 +33,7 @@ const buildFeedback = (status, i18n) => {
       break;
     }
     default: {
-      break;
+      throw new Error(`Unknown status: '${status}'!`);
     }
   }
 };
