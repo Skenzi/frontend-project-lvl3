@@ -86,7 +86,6 @@ const buildFeeds = (feeds) => {
   feeds.forEach((feed) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item');
-    li.setAttribute('data-id-feed', feed.id);
 
     const h3 = document.createElement('h3');
     h3.textContent = feed.title;
