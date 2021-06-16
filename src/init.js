@@ -37,25 +37,25 @@ const identifyPosts = (posts) => posts.map((post) => ({ id: _.uniqueId(), ...pos
 const checkNewPosts = (state, delay) => {
   setTimeout(function handel() {
     const urls = getUrls(state);
-    console.log(urls)
+    console.log(urls);
     const promise = urls.map((url) => getDataFromRss(url));
     Promise.allSettled(promise)
-    .then((data) => {
-      data.forEach(({ value }) => {
-        const { items: incomingPosts } = value;
-        console.log(incomingPosts)
-        const newPosts = _.differenceBy(incomingPosts, state.content.posts, 'link');
-        console.log(newPosts)
-        if (!_.isEmpty(newPosts)) {
-          const posts = identifyPosts(newPosts);
-          state.content.posts.unshift(...posts);
-        }
+      .then((data) => {
+        data.forEach(({ value }) => {
+          const { items: incomingPosts } = value;
+          console.log(incomingPosts);
+          const newPosts = _.differenceBy(incomingPosts, state.content.posts, 'link');
+          console.log(newPosts);
+          if (!_.isEmpty(newPosts)) {
+            const posts = identifyPosts(newPosts);
+            state.content.posts.unshift(...posts);
+          }
+        });
+      })
+      .then(() => {
+        console.log(delay);
+        setTimeout(handel, delay);
       });
-    })
-    .then(() => {
-      console.log(delay)
-      setTimeout(handel, delay);
-    });
   }, delay);
 };
 

@@ -1,5 +1,7 @@
 import onChange from 'on-change';
-import { buildFeeds, buildPosts, buildContainers, buildFeedback } from './render.js';
+import {
+  buildFeeds, buildPosts, buildContainers, buildFeedback,
+} from './render.js';
 
 export default (state, i18n) => onChange(state, (path, value) => {
   switch (path) {

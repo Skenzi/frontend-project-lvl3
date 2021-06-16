@@ -26,9 +26,10 @@ const buildFeedback = (value, i18n) => {
     input.classList.add('is-invalid');
     feedback.classList.add('text-danger');
   }
-}
+};
 
 const buildModal = (post, i18n) => {
+  const modal = document.querySelector('.modal');
   const modalTitle = modal.querySelector('.modal-title');
   modalTitle.textContent = post.title;
   const modalBody = modal.querySelector('.modal-body');
@@ -123,4 +124,6 @@ const buildPosts = (posts, state, i18n) => {
   });
 };
 
-export { buildFeeds, buildPosts, buildContainers, buildFeedback };
+export {
+  buildFeeds, buildPosts, buildContainers, buildFeedback,
+};
