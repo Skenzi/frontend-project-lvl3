@@ -5,7 +5,7 @@ import {
 
 export default (state, i18n) => onChange(state, (path, value) => {
   switch (path) {
-    case 'error': {
+    case 'form.error': {
       const feedback = document.querySelector('.feedback');
       feedback.textContent = value;
       break;

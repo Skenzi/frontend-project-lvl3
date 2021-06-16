@@ -55,7 +55,7 @@ const checkNewPosts = (state, delay) => {
   }, delay);
 };
 
-const formController = (state, i18instance) => {
+const rssFormController = (state, i18instance) => {
   const form = document.querySelector('form.rss-form');
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
@@ -66,7 +66,7 @@ const formController = (state, i18instance) => {
 
     if (valid !== null) {
       state.form.status = 'invalid';
-      state.error = valid;
+      state.form.error = valid;
       return;
     }
     state.form.status = 'wait';
@@ -85,9 +85,9 @@ const formController = (state, i18instance) => {
       .catch((e) => {
         state.form.status = 'invalid';
         if (e.isAxiosError) {
-          state.error = i18instance.t('error.network');
+          state.form.error = i18instance.t('error.network');
         } else {
-          state.error = i18instance.t('error.invalidRss');
+          state.form.error = i18instance.t('error.invalidRss');
         }
       });
     form.reset();
@@ -98,6 +98,7 @@ const init = (i18instance) => {
   const state = {
     form: {
       status: null,
+      error: null,
     },
     content: {
       feeds: [],
@@ -105,10 +106,9 @@ const init = (i18instance) => {
       status: null,
       readingPosts: [],
     },
-    error: null,
   };
   const watchedState = watcherState(state, i18instance);
-  formController(watchedState, i18instance);
+  rssFormController(watchedState, i18instance);
   const delay = 5000;
   checkNewPosts(watchedState, delay);
 };
