@@ -7,7 +7,6 @@ const markAsReadingPost = (post, state) => {
 
 const buildFeedback = (value, i18n) => {
   const feedback = document.querySelector('.feedback');
-  console.log(feedback)
   const input = document.querySelector('form.rss-form input');
   input.removeAttribute('readonly');
   const submit = document.querySelector('form.rss-form button[type=submit]');
@@ -30,13 +29,6 @@ const buildFeedback = (value, i18n) => {
 }
 
 const buildModal = (post, i18n) => {
-  const body = document.querySelector('body');
-  body.classList.add('modal-open');
-  const modal = document.querySelector('.modal');
-  modal.classList.add('show');
-  modal.setAttribute('style', 'display: block');
-  modal.setAttribute('aria-modal', 'true');
-  modal.removeAttribute('aria-hidden');
   const modalTitle = modal.querySelector('.modal-title');
   modalTitle.textContent = post.title;
   const modalBody = modal.querySelector('.modal-body');
@@ -46,19 +38,8 @@ const buildModal = (post, i18n) => {
   buttonAgree.setAttribute('href', post.link);
   buttonAgree.textContent = i18n.t('modal.go');
 
-  const buttonClose = modal.querySelector('.modal-footer button[data-dismiss]');
+  const buttonClose = modal.querySelector('.modal-footer button[data-bs-dismiss]');
   buttonClose.textContent = i18n.t('modal.close');
-
-  const modalDismiss = modal.querySelectorAll('[data-dismiss]');
-  modalDismiss.forEach((dismiss) => {
-    dismiss.addEventListener('click', () => {
-      modal.classList.remove('show');
-      modal.setAttribute('aria-hidden', 'true');
-      modal.removeAttribute('aria-modal');
-      modal.removeAttribute('style');
-      body.classList.remove('modal-open');
-    });
-  });
 };
 
 const postsController = (post, state, i18n) => {
@@ -114,8 +95,8 @@ const buildPosts = (posts, state, i18n) => {
   posts.forEach((post) => {
     const button = document.createElement('button');
     button.classList.add('btn', 'btn-sm', 'btn-primary');
-    button.setAttribute('data-toggle', 'modal');
-    button.setAttribute('data-target', '#modal');
+    button.setAttribute('data-bs-toggle', 'modal');
+    button.setAttribute('data-bs-target', '#modal');
     button.setAttribute('role', 'button');
     button.textContent = i18n.t('post.preview');
 
