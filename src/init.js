@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import i18n from 'i18next';
 import axios from 'axios';
 import _ from 'lodash';
@@ -37,23 +36,20 @@ const identifyPosts = (posts) => posts.map((post) => ({ id: _.uniqueId(), ...pos
 const checkNewPosts = (state, delay) => {
   setTimeout(function handel() {
     const urls = getUrls(state);
-    console.log(urls);
     const promise = urls.map((url) => getDataFromRss(url));
     Promise.allSettled(promise)
       .then((data) => {
-        data.forEach(({ value }) => {
+        const сompletedRequests = data.filter((item) => item.status === 'fulfilled');
+        сompletedRequests.forEach(({ value }) => {
           const { items: incomingPosts } = value;
-          console.log(incomingPosts);
           const newPosts = _.differenceBy(incomingPosts, state.content.posts, 'link');
-          console.log(newPosts);
           if (!_.isEmpty(newPosts)) {
             const posts = identifyPosts(newPosts);
             state.content.posts.unshift(...posts);
           }
         });
       })
-      .then(() => {
-        console.log(delay);
+      .finally(() => {
         setTimeout(handel, delay);
       });
   }, delay);
