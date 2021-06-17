@@ -17,7 +17,6 @@ export default {
       success: 'RSS uploaded successfully',
       wait: 'Viewing',
     },
-    success: 'RSS uploaded successfully',
     feedsTitle: 'Feeds',
     postsTitle: 'Posts',
   },
