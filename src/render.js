@@ -16,7 +16,7 @@ const buildFeedback = (status, i18n) => {
       input.classList.remove('is-invalid');
       feedback.classList.remove('text-danger');
       feedback.classList.add('text-success');
-      feedback.textContent = i18n.t('success');
+      feedback.textContent = i18n.t('formStatus.success');
       break;
     }
     case 'wait': {
@@ -24,7 +24,7 @@ const buildFeedback = (status, i18n) => {
       submit.setAttribute('disabled', 'disabled');
       input.classList.remove('is-invalid');
       feedback.classList.remove('text-danger', 'text-success');
-      feedback.textContent = 'Просмотр';
+      feedback.textContent = i18n.t('formStatus.wait');
       break;
     }
     case 'invalid': {

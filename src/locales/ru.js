@@ -13,7 +13,10 @@ export default {
     post: {
       preview: 'Просмотр',
     },
-    success: 'RSS успешно загружен',
+    formStatus: {
+      success: 'RSS успешно загружен',
+      wait: 'Просмотр',
+    },
     feedsTitle: 'Фиды',
     postsTitle: 'Посты',
   },
