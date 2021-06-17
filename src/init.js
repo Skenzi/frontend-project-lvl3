@@ -95,23 +95,6 @@ const rssFormController = (state, i18instance, elements) => {
   });
 };
 
-const elements = {
-  form: {
-    rssForm: document.querySelector('form.rss-form'),
-    textbox: document.querySelector('form.rss-form .form-control'),
-    submit: document.querySelector('form.rss-form button[type=submit]'),
-  },
-  modal: {
-    modalTitle: document.querySelector('.modal-title'),
-    modalBody: document.querySelector('.modal-body'),
-    buttonAgree: document.querySelector('.modal-footer [data-agree]'),
-    buttonClose: document.querySelector('.modal-footer button[data-bs-dismiss]'),
-  },
-  feedback: document.querySelector('.feedback'),
-  postsContainer: document.querySelector('.posts'),
-  feedsContainer: document.querySelector('.feeds'),
-};
-
 const init = (i18instance) => {
   const state = {
     form: {
@@ -125,6 +108,24 @@ const init = (i18instance) => {
       readingPosts: [],
     },
   };
+
+  const elements = {
+    form: {
+      rssForm: document.querySelector('form.rss-form'),
+      textbox: document.querySelector('form.rss-form .form-control'),
+      submit: document.querySelector('form.rss-form button[type=submit]'),
+    },
+    modal: {
+      modalTitle: document.querySelector('.modal-title'),
+      modalBody: document.querySelector('.modal-body'),
+      buttonAgree: document.querySelector('.modal-footer [data-agree]'),
+      buttonClose: document.querySelector('.modal-footer button[data-bs-dismiss]'),
+    },
+    feedback: document.querySelector('.feedback'),
+    postsContainer: document.querySelector('.posts'),
+    feedsContainer: document.querySelector('.feeds'),
+  };
+
   const watchedState = watcherState(state, i18instance, elements);
   rssFormController(watchedState, i18instance, elements);
   const delay = 5000;
