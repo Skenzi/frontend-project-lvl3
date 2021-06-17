@@ -55,11 +55,10 @@ const checkNewPosts = (state, delay) => {
   }, delay);
 };
 
-const rssFormController = (state, i18instance) => {
-  const form = document.querySelector('form.rss-form');
-  form.addEventListener('submit', (ev) => {
+const rssFormController = (state, i18instance, elements) => {
+  elements.form.rssForm.addEventListener('submit', (ev) => {
     ev.preventDefault();
-    const formData = new FormData(form);
+    const formData = new FormData(elements.form.rssForm);
     const url = formData.get('url');
 
     const validateError = validate(url, state);
@@ -90,8 +89,26 @@ const rssFormController = (state, i18instance) => {
           state.form.error = i18instance.t('error.invalidRss');
         }
       });
-    form.reset();
+    elements.form.rssForm.reset();
+    elements.form.textbox.focus();
   });
+};
+
+const elements = {
+  form: {
+    rssForm: document.querySelector('form.rss-form'),
+    textbox: document.querySelector('form.rss-form .form-control'),
+    submit: document.querySelector('form.rss-form button[type=submit]'),
+  },
+  modal: {
+    modalTitle: document.querySelector('.modal-title'),
+    modalBody: document.querySelector('.modal-body'),
+    buttonAgree: document.querySelector('.modal-footer [data-agree]'),
+    buttonClose: document.querySelector('.modal-footer button[data-bs-dismiss]'),
+  },
+  feedback: document.querySelector('.feedback'),
+  postsContainer: document.querySelector('.posts'),
+  feedsContainer: document.querySelector('.feeds'),
 };
 
 const init = (i18instance) => {
@@ -107,8 +124,8 @@ const init = (i18instance) => {
       readingPosts: [],
     },
   };
-  const watchedState = watcherState(state, i18instance);
-  rssFormController(watchedState, i18instance);
+  const watchedState = watcherState(state, i18instance, elements);
+  rssFormController(watchedState, i18instance, elements);
   const delay = 5000;
   checkNewPosts(watchedState, delay);
 };

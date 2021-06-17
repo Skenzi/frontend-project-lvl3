@@ -3,16 +3,15 @@ import {
   buildFeeds, buildPosts, buildContainers, buildFeedback,
 } from './render.js';
 
-export default (state, i18n) => onChange(state, (path, value) => {
+export default (state, i18n, elements) => onChange(state, (path, value) => {
   switch (path) {
     case 'form.error': {
-      const feedback = document.querySelector('.feedback');
-      feedback.textContent = value;
+      elements.feedback.textContent = value;
       break;
     }
     case 'content.status': {
       if (value === 'empty') {
-        buildContainers(i18n);
+        buildContainers(i18n, elements);
       }
       break;
     }
@@ -21,11 +20,11 @@ export default (state, i18n) => onChange(state, (path, value) => {
       break;
     }
     case 'content.posts': {
-      buildPosts(value, state, i18n);
+      buildPosts(value, state, i18n, elements);
       break;
     }
     case 'form.status': {
-      buildFeedback(value, i18n);
+      buildFeedback(value, i18n, elements);
       break;
     }
     default: {

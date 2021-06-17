@@ -5,31 +5,28 @@ const markAsReadingPost = (post, state) => {
   state.content.readingPosts.push(post.id);
 };
 
-const buildFeedback = (status, i18n) => {
-  const feedback = document.querySelector('.feedback');
-  const input = document.querySelector('form.rss-form input');
-  input.removeAttribute('readonly');
-  const submit = document.querySelector('form.rss-form button[type=submit]');
-  submit.removeAttribute('disabled');
+const buildFeedback = (status, i18n, elements) => {
+  elements.form.textbox.removeAttribute('readonly');
+  elements.form.submit.removeAttribute('disabled');
   switch (status) {
     case 'success': {
-      input.classList.remove('is-invalid');
-      feedback.classList.remove('text-danger');
-      feedback.classList.add('text-success');
-      feedback.textContent = i18n.t('formStatus.success');
+      elements.form.textbox.classList.remove('is-invalid');
+      elements.feedback.classList.remove('text-danger');
+      elements.feedback.classList.add('text-success');
+      elements.feedback.textContent = i18n.t('formStatus.success');
       break;
     }
     case 'wait': {
-      input.setAttribute('readonly', 'readonly');
-      submit.setAttribute('disabled', 'disabled');
-      input.classList.remove('is-invalid');
-      feedback.classList.remove('text-danger', 'text-success');
-      feedback.textContent = i18n.t('formStatus.wait');
+      elements.form.textbox.setAttribute('readonly', 'readonly');
+      elements.form.submit.setAttribute('disabled', 'disabled');
+      elements.form.textbox.classList.remove('is-invalid');
+      elements.feedback.classList.remove('text-danger', 'text-success');
+      elements.feedback.textContent = i18n.t('formStatus.wait');
       break;
     }
     case 'invalid': {
-      input.classList.add('is-invalid');
-      feedback.classList.add('text-danger');
+      elements.form.textbox.classList.add('is-invalid');
+      elements.feedback.classList.add('text-danger');
       break;
     }
     default: {
@@ -38,38 +35,27 @@ const buildFeedback = (status, i18n) => {
   }
 };
 
-const fillingModal = (post, i18n) => {
-  const modal = document.querySelector('.modal');
-  const modalTitle = modal.querySelector('.modal-title');
-  modalTitle.textContent = post.title;
-  const modalBody = modal.querySelector('.modal-body');
-  modalBody.textContent = post.description;
-
-  const buttonAgree = modal.querySelector('[data-agree]');
-  buttonAgree.setAttribute('href', post.link);
-  buttonAgree.textContent = i18n.t('modal.go');
-
-  const buttonClose = modal.querySelector('.modal-footer button[data-bs-dismiss]');
-  buttonClose.textContent = i18n.t('modal.close');
+const fillingModal = (post, i18n, elements) => {
+  elements.modal.modalTitle.textContent = post.title;
+  elements.modal.modalBody.textContent = post.description;
+  elements.modal.buttonAgree.setAttribute('href', post.link);
+  elements.modal.buttonAgree.textContent = i18n.t('modal.go');
+  elements.modal.buttonClose.textContent = i18n.t('modal.close');
 };
 
-const postsController = (post, state, i18n) => {
+const postsController = (post, state, i18n, elements) => {
   markAsReadingPost(post, state);
-  fillingModal(post, i18n);
+  fillingModal(post, i18n, elements);
 };
 
-const buildContainers = (i18n) => {
-  const feedsContainer = document.querySelector('.feeds');
-
+const buildContainers = (i18n, elements) => {
   const feedsContainerTitle = document.createElement('h2');
   feedsContainerTitle.textContent = i18n.t('feedsTitle');
 
   const listFeeds = document.createElement('ul');
   listFeeds.classList.add('list-group', 'mb-5');
 
-  feedsContainer.prepend(feedsContainerTitle, listFeeds);
-
-  const postsContainer = document.querySelector('.posts');
+  elements.feedsContainer.prepend(feedsContainerTitle, listFeeds);
 
   const postsContainerTitle = document.createElement('h2');
   postsContainerTitle.textContent = i18n.t('postsTitle');
@@ -77,7 +63,7 @@ const buildContainers = (i18n) => {
   const listPosts = document.createElement('ul');
   listPosts.classList.add('list-group');
 
-  postsContainer.prepend(postsContainerTitle, listPosts);
+  elements.postsContainer.prepend(postsContainerTitle, listPosts);
 };
 
 const buildFeeds = (feeds) => {
@@ -98,7 +84,7 @@ const buildFeeds = (feeds) => {
   });
 };
 
-const buildPosts = (posts, state, i18n) => {
+const buildPosts = (posts, state, i18n, elements) => {
   const listPosts = document.querySelector('.posts > ul');
   listPosts.textContent = '';
 
@@ -129,7 +115,7 @@ const buildPosts = (posts, state, i18n) => {
     listPosts.append(li);
 
     a.addEventListener('click', () => markAsReadingPost(post, state));
-    button.addEventListener('click', () => postsController(post, state, i18n));
+    button.addEventListener('click', () => postsController(post, state, i18n, elements));
   });
 };
 
