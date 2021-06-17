@@ -9,6 +9,7 @@ export default {
       invalidUrl: 'The link must be a valid URL',
       invalidRss: 'The resource does not contain a valid RSS',
       network: 'Network Error',
+      other: 'Oops... Something is wrong',
     },
     formStatus: {
       success: 'RSS uploaded successfully',

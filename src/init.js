@@ -85,8 +85,10 @@ const rssFormController = (state, i18instance, elements) => {
         state.form.status = 'invalid';
         if (e.isAxiosError) {
           state.form.error = i18instance.t('error.network');
-        } else {
+        } else if (e.message === 'parserError') {
           state.form.error = i18instance.t('error.invalidRss');
+        } else {
+          state.form.error = i18instance.t('error.other');
         }
       });
     elements.form.rssForm.reset();

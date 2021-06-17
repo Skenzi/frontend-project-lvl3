@@ -5,6 +5,7 @@ export default {
       invalidUrl: 'Ссылка должна быть валидным URL',
       invalidRss: 'Ресурс не содержит валидный RSS',
       network: 'Ошибка сети',
+      other: 'Упс...Что-то не так',
     },
     modal: {
       close: 'Закрыть',
