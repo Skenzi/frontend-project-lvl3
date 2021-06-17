@@ -24,6 +24,8 @@ export default (state, i18n, elements) => onChange(state, (path, value) => {
       break;
     }
     case 'form.status': {
+      elements.form.textbox.removeAttribute('readonly');
+      elements.form.submit.removeAttribute('disabled');
       buildFeedback(value, i18n, elements);
       break;
     }

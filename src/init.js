@@ -56,7 +56,6 @@ const checkNewPosts = (state, delay) => {
 };
 
 const rssFormController = (state, i18instance, elements) => {
-  console.log(elements.form.rssForm)
   elements.form.rssForm.addEventListener('submit', (ev) => {
     ev.preventDefault();
     const formData = new FormData(elements.form.rssForm);

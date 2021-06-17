@@ -6,11 +6,9 @@ const markAsReadingPost = (post, state) => {
 };
 
 const buildFeedback = (status, i18n, elements) => {
-  elements.form.textbox.removeAttribute('readonly');
-  elements.form.submit.removeAttribute('disabled');
+  elements.form.textbox.classList.remove('is-invalid');
   switch (status) {
     case 'success': {
-      elements.form.textbox.classList.remove('is-invalid');
       elements.feedback.classList.remove('text-danger');
       elements.feedback.classList.add('text-success');
       elements.feedback.textContent = i18n.t('formStatus.success');
@@ -19,7 +17,6 @@ const buildFeedback = (status, i18n, elements) => {
     case 'wait': {
       elements.form.textbox.setAttribute('readonly', 'readonly');
       elements.form.submit.setAttribute('disabled', 'disabled');
-      elements.form.textbox.classList.remove('is-invalid');
       elements.feedback.classList.remove('text-danger', 'text-success');
       elements.feedback.textContent = i18n.t('formStatus.wait');
       break;
@@ -111,7 +108,6 @@ const buildPosts = (posts, state, i18n, elements) => {
     li.classList.add('d-flex', 'justify-content-between', 'align-items-start', 'list-group-item');
     li.setAttribute('data-id-post', post.id);
     li.prepend(a, button);
-
     listPosts.append(li);
 
     a.addEventListener('click', () => markAsReadingPost(post, state));
